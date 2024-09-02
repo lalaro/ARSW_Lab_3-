@@ -10,6 +10,8 @@ import edu.eci.arsw.spamkeywordsdatasource.HostBlacklistsDataSourceFacade;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +23,8 @@ public class HostBlackListsValidator {
 
     private static final int BLACK_LIST_ALARM_COUNT=5;
     private int checkedListsCount=0;
+    private AtomicInteger occurrencesCount = new AtomicInteger(0);
+
 
     /**
      * Check the given host's IP address in all the available black lists,
@@ -40,7 +44,6 @@ public class HostBlackListsValidator {
         int totalBlacklists = skds.getRegisteredServersCount();
         int range = totalBlacklists / N;
         int startIndex = 0;
-        int occurrencesCount = 0;
         for (int i = 0; i < N; i++) {
             int endIndex;
             if (i == N - 1) {
@@ -51,7 +54,7 @@ public class HostBlackListsValidator {
                 endIndex = startIndex + range;
             }
 
-            Thread_BlackList thread = new Thread_BlackList(startIndex, endIndex, ipaddress);
+            Thread_BlackList thread = new Thread_BlackList(startIndex, endIndex, ipaddress, occurrencesCount);
             thread.start();
             threads.add(thread);
             startIndex = endIndex;
@@ -66,12 +69,12 @@ public class HostBlackListsValidator {
         }
     
         for (Thread_BlackList thread : threads) {
-            occurrencesCount += thread.coincidenceCount();
+            //occurrencesCount += thread.coincidenceCount();
             checkedListsCount += thread.getCheckedListsCount();
             blackListOccurrences.addAll(thread.getBlackList());
         }
     
-        if (occurrencesCount >= BLACK_LIST_ALARM_COUNT) {
+        if (occurrencesCount.get() >= BLACK_LIST_ALARM_COUNT) {
             skds.reportAsNotTrustworthy(ipaddress);
         } else {
             skds.reportAsTrustworthy(ipaddress);
