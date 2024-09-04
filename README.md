@@ -29,6 +29,8 @@ Teniendo en cuenta los conceptos vistos de condición de carrera y sincronizaci�
 - La búsqueda distribuida se detenga (deje de buscar en las listas negras restantes) y retorne la respuesta apenas, en su conjunto, los hilos hayan detectado el número de ocurrencias requerido que determina si un host es confiable o no (_BLACK_LIST_ALARM_COUNT_).
 - Lo anterior, garantizando que no se den condiciones de carrera.
 
+
+
 ##### Parte III. – Avance para el martes, antes de clase.
 
 Sincronización y Dead-Locks.
@@ -44,11 +46,44 @@ Sincronización y Dead-Locks.
 
 2. Revise el código e identifique cómo se implemento la funcionalidad antes indicada. Dada la intención del juego, un invariante debería ser que la sumatoria de los puntos de vida de todos los jugadores siempre sea el mismo(claro está, en un instante de tiempo en el que no esté en proceso una operación de incremento/reducción de tiempo). Para este caso, para N jugadores, cual debería ser este valor?.
 
+R/ En el código, la funcionalidad del juego "highlander-simulator" se implementa mediante hilos para cada inmortal. Cada inmortal lucha contra otro, reduciendo su vida en 10 puntos y ganando esos mismos puntos. Las peleas están sincronizadas para evitar que dos inmortales ataquen al mismo oponente al mismo tiempo.
+
+- Invariante:
+La suma total de la vida de todos los inmortales debe mantenerse constante mientras no haya peleas en curso.
+
+- Valor inicial:
+Para N jugadores, cada uno con 100 puntos de vida, la suma total inicial de vida es:
+
+Suma total = 100 × 𝑁
+
+Este valor debe mantenerse constante durante el juego.
+
 3. Ejecute la aplicación y verifique cómo funcionan las opción ‘pause and check’. Se cumple el invariante?.
+    ![](./img/media/Image2.jpeg)
+
+    La funcionalidad de Pause and check debería detener temporalmente a los inmortales y calcular la suma total de la vida de todos ellos para verificar si se cumple el invariante.
+
+	Al ejecutar la aplicación, los inmortales inician sus peleas. 
+	Al hacer clic en el botón Pause and check, calcula la suma de las vidas. El problema es que no se están deteniendo los hilos como se espera.
+
+	![](./img/media/Image3.jpeg)
 
 4. Una primera hipótesis para que se presente la condición de carrera para dicha función (pause and check), es que el programa consulta la lista cuyos valores va a imprimir, a la vez que otros hilos modifican sus valores. Para corregir esto, haga lo que sea necesario para que efectivamente, antes de imprimir los resultados actuales, se pausen todos los demás hilos. Adicionalmente, implemente la opción ‘resume’.
 
+Primero debemos actualizar la clase de ControlFrame, aquí estamos configurando los botones de Pause and check y resume.
+![](./img/media/Image4.jpeg) 
+
+Y luego si nos vamos a la clase de Immnortal y configuramos la espera de los hilos para que se detengan antes de sumar y poder llevar la cuenta y luego creamos configurando los métodos para los botones de Pause and check y resume.
+
+![](./img/media/Image5.jpeg)
+![](./img/media/Image6.jpeg)
+
+Así ya tenemos confirgurado los botones, haciendo lo que esperabamos
 5. Verifique nuevamente el funcionamiento (haga clic muchas veces en el botón). Se cumple o no el invariante?.
+
+El programa funciona bien, pero el invariante no se cumple siempre.
+![](./img/media/Image7.jpeg)
+![](./img/media/Image8.jpeg)
 
 6. Identifique posibles regiones críticas en lo que respecta a la pelea de los inmortales. Implemente una estrategia de bloqueo que evite las condiciones de carrera. Recuerde que si usted requiere usar dos o más ‘locks’ simultáneamente, puede usar bloques sincronizados anidados:
 

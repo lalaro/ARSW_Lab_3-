@@ -17,6 +17,7 @@ public class Immortal extends Thread {
 
     private final Random r = new Random(System.currentTimeMillis());
 
+    private boolean paused = false;
 
     public Immortal(String name, List<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
         super(name);
@@ -30,6 +31,17 @@ public class Immortal extends Thread {
     public void run() {
 
         while (true) {
+
+            synchronized (this) {
+                while (paused) {
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             Immortal im;
 
             int myIndex = immortalsPopulation.indexOf(this);
@@ -84,4 +96,16 @@ public class Immortal extends Thread {
         return name + "[" + health + "]";
     }
 
+    public void pauseImmortal() {
+        synchronized (this) {
+            paused = true;
+        }
+    }
+
+    public void resumeImmortal() {
+        synchronized (this) {
+            paused = false;
+            notify();
+        }
+    }
 }
