@@ -1,0 +1,16 @@
+CONCLUSIONES
+
+1. Condiciones de carrera: Si varios hilos (inmortales) intentan modificar la lista compartida simultáneamente, como eliminar inmortales muertos,
+podría haber condiciones de carrera. Esto puede generar inconsistencias en el estado de la lista, como excepciones (e.g., ConcurrentModificationException)
+o comportamiento errático.
+
+2. Impacto en la simulación: Si se sincroniza el acceso a la lista, la simulación se vuelve lenta porque los hilos estarían esperando uno a uno para
+modificar la lista, lo que elimina la concurrencia efectiva del programa.
+
+3. Solución sin sincronización: Para evitar la sincronización y mejorar el rendimiento, se podria usar una estructura concurrente como CopyOnWriteArrayList.
+Esta lista crea una copia de la lista cada vez que se modifica, evitando las condiciones de carrera durante la iteración. Aunque esta solución es menos
+eficiente en términos de memoria, permite mantener la concurrencia sin bloquear los hilos.
+
+4. Observaciones en la simulación: Al eliminar inmortales muertos, la simulación debería volverse más eficiente ya que evita peleas fallidas.
+Sin embargo, sin un manejo adecuado de concurrencia, pueden aparecer errores como peleas con inmortales ya eliminados si la lista no se actualiza
+correctamente.

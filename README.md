@@ -17,9 +17,15 @@ La clase responsable es Consumer, ya que está revisando constantemente la cola 
 
 2. Haga los ajustes necesarios para que la solución use más eficientemente la CPU, teniendo en cuenta que -por ahora- la producción es lenta y el consumo es rápido. Verifique con JVisualVM que el consumo de CPU se reduzca.
 
-
+![](./img/media/Image19.jpeg)
+![](./img/media/Image20.jpeg)
+![](./img/media/Image21.jpeg)
 
 3. Haga que ahora el productor produzca muy rápido, y el consumidor consuma lento. Teniendo en cuenta que el productor conoce un límite de Stock (cuantos elementos debería tener, a lo sumo en la cola), haga que dicho límite se respete. Revise el API de la colección usada como cola para ver cómo garantizar que dicho límite no se supere. Verifique que, al poner un límite pequeño para el 'stock', no haya consumo alto de CPU ni errores.
+
+![](./img/media/Image17.jpeg)
+![](./img/media/Image18.jpeg)
+![](./img/media/Image22.jpeg)
 
 
 ##### Parte II. – Antes de terminar la clase.
@@ -29,7 +35,9 @@ Teniendo en cuenta los conceptos vistos de condición de carrera y sincronizaci�
 - La búsqueda distribuida se detenga (deje de buscar en las listas negras restantes) y retorne la respuesta apenas, en su conjunto, los hilos hayan detectado el número de ocurrencias requerido que determina si un host es confiable o no (_BLACK_LIST_ALARM_COUNT_).
 - Lo anterior, garantizando que no se den condiciones de carrera.
 
-
+![](./img/media/Image13.jpeg)
+![](./img/media/Image14.jpeg)
+![](./img/media/Image15.jpeg)
 
 ##### Parte III. – Avance para el martes, antes de clase.
 
@@ -43,6 +51,8 @@ Sincronización y Dead-Locks.
 	* Cada jugador conoce a los N-1 jugador restantes.
 	* Cada jugador, permanentemente, ataca a algún otro inmortal. El que primero ataca le resta M puntos de vida a su contrincante, y aumenta en esta misma cantidad sus propios puntos de vida.
 	* El juego podría nunca tener un único ganador. Lo más probable es que al final sólo queden dos, peleando indefinidamente quitando y sumando puntos de vida.
+
+![](./img/media/Image23.jpeg)
 
 2. Revise el código e identifique cómo se implemento la funcionalidad antes indicada. Dada la intención del juego, un invariante debería ser que la sumatoria de los puntos de vida de todos los jugadores siempre sea el mismo(claro está, en un instante de tiempo en el que no esté en proceso una operación de incremento/reducción de tiempo). Para este caso, para N jugadores, cual debería ser este valor?.
 
@@ -79,6 +89,7 @@ Y luego si nos vamos a la clase de Immnortal y configuramos la espera de los hil
 ![](./img/media/Image6.jpeg)
 
 Así ya tenemos confirgurado los botones, haciendo lo que esperabamos
+
 5. Verifique nuevamente el funcionamiento (haga clic muchas veces en el botón). Se cumple o no el invariante?.
 
 El programa funciona bien, pero el invariante no se cumple siempre.
@@ -94,19 +105,30 @@ El programa funciona bien, pero el invariante no se cumple siempre.
 		}
 	}
 	```
+![](./img/media/Image9.jpeg)
 
 7. Tras implementar su estrategia, ponga a correr su programa, y ponga atención a si éste se llega a detener. Si es así, use los programas jps y jstack para identificar por qué el programa se detuvo.
+El programa no se detine, así que no tenemos inconvenientes con que se detenga
+   
+![](./img/media/Image10.jpeg)
 
 8. Plantee una estrategia para corregir el problema antes identificado (puede revisar de nuevo las páginas 206 y 207 de _Java Concurrency in Practice_).
 
+![](./img/media/Image16.jpeg)
+El programa no se detiene porque tiene un orden a la hora  de detener al hilo, de este modo no va quedar en un ciclo de espera.
+
 9. Una vez corregido el problema, rectifique que el programa siga funcionando de manera consistente cuando se ejecutan 100, 1000 o 10000 inmortales. Si en estos casos grandes se empieza a incumplir de nuevo el invariante, debe analizar lo realizado en el paso 4.
+   ![](./img/media/Image11.jpeg)
 
 10. Un elemento molesto para la simulación es que en cierto punto de la misma hay pocos 'inmortales' vivos realizando peleas fallidas con 'inmortales' ya muertos. Es necesario ir suprimiendo los inmortales muertos de la simulación a medida que van muriendo. Para esto:
 	* Analizando el esquema de funcionamiento de la simulación, esto podría crear una condición de carrera? Implemente la funcionalidad, ejecute la simulación y observe qué problema se presenta cuando hay muchos 'inmortales' en la misma. Escriba sus conclusiones al respecto en el archivo RESPUESTAS.txt.
-	* Corrija el problema anterior __SIN hacer uso de sincronización__, pues volver secuencial el acceso a la lista compartida de inmortales haría extremadamente lenta la simulación.
+	  
+    ![](./img/media/Image24.jpeg)
+
+    * Corrija el problema anterior __SIN hacer uso de sincronización__, pues volver secuencial el acceso a la lista compartida de inmortales haría extremadamente lenta la simulación.
 
 11. Para finalizar, implemente la opción STOP.
-
+	![](./img/media/Image12.jpeg)
 <!--
 ### Criterios de evaluación
 
