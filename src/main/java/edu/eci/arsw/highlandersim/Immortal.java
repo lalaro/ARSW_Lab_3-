@@ -32,7 +32,7 @@ public class Immortal extends Thread {
 
     public void run() {
 
-        while (true) {
+        while (alive && immortalsPopulation.size() > 1) {
             Immortal im;
 
 
@@ -48,7 +48,7 @@ public class Immortal extends Thread {
                 
 
                 synchronized(immortalsPopulation){
-                
+                    
                     int myIndex = immortalsPopulation.indexOf(this);
 
                     int nextFighterIndex = r.nextInt(immortalsPopulation.size());
@@ -62,7 +62,7 @@ public class Immortal extends Thread {
                         
                         try {
                             this.fight(im);
-                            Thread.sleep(200);
+                            Thread.sleep(1);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -87,12 +87,8 @@ public class Immortal extends Thread {
                 updateCallback.processReport(this + " says: I killed " + i2 + " !\n");
                 
                 i2.dead();
-                immortalsPopulation.remove(i2);
-                
-                try {
-                    i2.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                synchronized(immortalsPopulation){
+                    immortalsPopulation.remove(i2);
                 }
                
             }
