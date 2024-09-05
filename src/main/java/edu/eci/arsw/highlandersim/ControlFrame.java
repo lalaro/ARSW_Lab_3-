@@ -72,7 +72,7 @@ public class ControlFrame extends JFrame {
 
                 immortals = setupInmortals();
 
-                if (immortals != null) {
+                if (immortals != null && immortals.size() != 0) {
                     for (Immortal im : immortals) {
                         im.start();
                     }
